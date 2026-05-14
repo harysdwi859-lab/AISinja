@@ -1,45 +1,373 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AISinja - All In One</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AISinja — All in One Tools</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
 </head>
-<body class="bg-gray-900 text-white font-sans">
+<body>
 
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="fixed inset-0 bg-black bg-opacity-90 flex-col items-center justify-center hidden z-50">
-        <img id="loading-cecan" src="" class="w-64 h-80 object-cover rounded-lg shadow-lg mb-4">
-        <p class="text-xl animate-pulse">Sabar proses dulu, Sambil nunggu liat cewek cantik ye kan...</p>
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen" class="hidden">
+    <div class="loading-inner">
+      <div class="loading-girl-wrap">
+        <img id="loading-girl" src="" alt="loading" />
+        <div class="loading-grain"></div>
+      </div>
+      <div class="loading-text-area">
+        <div class="loading-spinner"></div>
+        <p id="loading-msg" class="loading-msg">Sabar proses dulu, Sambil nunggu liat cewek cantik ye kan</p>
+        <div class="loading-bar"><div id="loading-progress" class="loading-progress"></div></div>
+        <p class="loading-timer" id="loading-timer">5s</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT MODAL -->
+  <div id="result-modal" class="hidden">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-logo" onclick="showPage('home')">AI<span>Sinja</span></div>
+    <div class="nav-links">
+      <button onclick="showPage('download')">⬇ Download</button>
+      <button onclick="showPage('editing')">✂ Editing</button>
+      <button onclick="openMusic()">♪ Music</button>
+      <button class="locked-btn" onclick="showPage('vip')">★ VIP</button>
+    </div>
+    <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div id="mobile-menu" class="mobile-menu hidden">
+    <button onclick="showPage('download');toggleMobileMenu()">⬇ Download</button>
+    <button onclick="showPage('editing');toggleMobileMenu()">✂ Editing</button>
+    <button onclick="openMusic();toggleMobileMenu()">♪ Music</button>
+    <button class="locked-btn" onclick="showPage('vip');toggleMobileMenu()">★ VIP</button>
+  </div>
+
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page active">
+    <div class="home-bg">
+      <div class="home-noise"></div>
+      <div class="home-glow"></div>
+    </div>
+    <div class="home-content">
+      <div class="site-title-wrap">
+        <div class="site-badge">All In One Tools</div>
+        <h1 class="site-title">AI<span>Sinja</span></h1>
+        <p class="site-sub">Download · Edit · Explore</p>
+      </div>
+      <div class="quote-card">
+        <div class="quote-top-bar">
+          <span class="quote-label">✦ Anime Quote</span>
+          <span id="quote-countdown" class="quote-cd">5:00</span>
+        </div>
+        <div id="quote-img-wrap" class="quote-img-wrap">
+          <img id="quote-img" src="" alt="" />
+        </div>
+        <blockquote id="quote-text" class="quote-text">Memuat quote…</blockquote>
+        <p id="quote-char" class="quote-char">—</p>
+        <button class="quote-refresh" onclick="fetchQuote()">↺ Refresh</button>
+      </div>
+      <div class="home-menu-grid">
+        <div class="home-card" onclick="showPage('download')">
+          <div class="hc-icon">⬇</div>
+          <div class="hc-title">Download</div>
+          <div class="hc-desc">YT · IG · FB · TikTok · Spotify</div>
+        </div>
+        <div class="home-card" onclick="showPage('editing')">
+          <div class="hc-icon">✂</div>
+          <div class="hc-title">Editing</div>
+          <div class="hc-desc">Remove BG · Convert · Upscale</div>
+        </div>
+        <div class="home-card" onclick="openMusic()">
+          <div class="hc-icon">♪</div>
+          <div class="hc-title">Music</div>
+          <div class="hc-desc">Kawihfy — Web Music Player</div>
+        </div>
+        <div class="home-card locked" onclick="showPage('vip')">
+          <div class="hc-icon">★</div>
+          <div class="hc-title">VIP</div>
+          <div class="hc-desc">Konten Eksklusif Terkunci</div>
+          <div class="lock-badge">🔒</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOWNLOAD PAGE -->
+  <div id="page-download" class="page">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('home')">← Back</button>
+      <h2>⬇ Download Menu</h2>
+    </div>
+    <div class="tool-tabs">
+      <button class="tab-btn active" onclick="switchTab('dl','ytmp3',this)">YT MP3</button>
+      <button class="tab-btn" onclick="switchTab('dl','ytmp4',this)">YT MP4</button>
+      <button class="tab-btn" onclick="switchTab('dl','instagram',this)">Instagram</button>
+      <button class="tab-btn" onclick="switchTab('dl','facebook',this)">Facebook</button>
+      <button class="tab-btn" onclick="switchTab('dl','tiktok',this)">TikTok</button>
+      <button class="tab-btn" onclick="switchTab('dl','spotify',this)">Spotify</button>
     </div>
 
-    <!-- Main Menu / Hero Section -->
-    <header class="h-screen flex flex-col items-center justify-center text-center p-6" id="main-menu">
-        <h1 class="text-5xl font-bold mb-8 text-blue-500">AISinja</h1>
-        <div id="anime-quote-container" class="bg-gray-800 p-6 rounded-xl max-w-2xl border border-blue-400">
-            <img id="quote-img" src="" class="w-full h-48 object-cover rounded mb-4 hidden">
-            <p id="quote-text" class="italic text-lg">"Memuat kata-kata bijak untuk Tuan..."</p>
-            <p id="quote-char" class="mt-2 text-blue-400 font-bold"></p>
+    <!-- YT MP3 -->
+    <div id="dl-ytmp3" class="tool-panel active-panel">
+      <div class="tool-card">
+        <div class="tool-icon">🎵</div>
+        <h3>YouTube → MP3</h3>
+        <p class="tool-desc">Download audio dari YouTube dalam format MP3</p>
+        <input type="url" id="ytmp3-url" placeholder="https://youtube.com/watch?v=..." class="tool-input" />
+        <button class="run-btn" onclick="runDownload('ytmp3')">Download MP3</button>
+      </div>
+    </div>
+
+    <!-- YT MP4 -->
+    <div id="dl-ytmp4" class="tool-panel">
+      <div class="tool-card">
+        <div class="tool-icon">🎬</div>
+        <h3>YouTube → MP4</h3>
+        <p class="tool-desc">Download video dari YouTube dalam format MP4</p>
+        <input type="url" id="ytmp4-url" placeholder="https://youtube.com/watch?v=..." class="tool-input" />
+        <button class="run-btn" onclick="runDownload('ytmp4')">Download MP4</button>
+      </div>
+    </div>
+
+    <!-- Instagram -->
+    <div id="dl-instagram" class="tool-panel">
+      <div class="tool-card">
+        <div class="tool-icon">📸</div>
+        <h3>Instagram Downloader</h3>
+        <p class="tool-desc">Download foto/video/reel dari Instagram</p>
+        <input type="url" id="instagram-url" placeholder="https://instagram.com/p/..." class="tool-input" />
+        <button class="run-btn" onclick="runDownload('instagram')">Download</button>
+      </div>
+    </div>
+
+    <!-- Facebook -->
+    <div id="dl-facebook" class="tool-panel">
+      <div class="tool-card">
+        <div class="tool-icon">📘</div>
+        <h3>Facebook Downloader</h3>
+        <p class="tool-desc">Download video dari Facebook</p>
+        <input type="url" id="facebook-url" placeholder="https://facebook.com/..." class="tool-input" />
+        <button class="run-btn" onclick="runDownload('facebook')">Download</button>
+      </div>
+    </div>
+
+    <!-- TikTok -->
+    <div id="dl-tiktok" class="tool-panel">
+      <div class="tool-card">
+        <div class="tool-icon">🎭</div>
+        <h3>TikTok Downloader</h3>
+        <p class="tool-desc">Download video TikTok tanpa watermark</p>
+        <input type="url" id="tiktok-url" placeholder="https://tiktok.com/@.../video/..." class="tool-input" />
+        <button class="run-btn" onclick="runDownload('tiktok')">Download</button>
+      </div>
+    </div>
+
+    <!-- Spotify -->
+    <div id="dl-spotify" class="tool-panel">
+      <div class="tool-card">
+        <div class="tool-icon">🎧</div>
+        <h3>Spotify Downloader</h3>
+        <p class="tool-desc">Download lagu dari Spotify</p>
+        <input type="url" id="spotify-url" placeholder="https://open.spotify.com/track/..." class="tool-input" />
+        <button class="run-btn" onclick="runDownload('spotify')">Download</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITING PAGE -->
+  <div id="page-editing" class="page">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('home')">← Back</button>
+      <h2>✂ Editing Menu</h2>
+    </div>
+    <div class="tool-tabs">
+      <button class="tab-btn active" onclick="switchTab('ed','removebg',this)">Remove BG</button>
+      <button class="tab-btn" onclick="switchTab('ed','pdftoimgconv',this)">PDF→IMG</button>
+      <button class="tab-btn" onclick="switchTab('ed','imgtopdfconv',this)">IMG→PDF</button>
+      <button class="tab-btn" onclick="switchTab('ed','pngtojpeg',this)">PNG→JPEG</button>
+      <button class="tab-btn" onclick="switchTab('ed','jpegtopng',this)">JPEG→PNG</button>
+      <button class="tab-btn" onclick="switchTab('ed','upscale',this)">Upscale</button>
+      <button class="tab-btn" onclick="switchTab('ed','timpa',this)">Timpa Teks</button>
+    </div>
+
+    <!-- Remove BG -->
+    <div id="ed-removebg" class="tool-panel active-panel">
+      <div class="tool-card">
+        <div class="tool-icon">🪄</div>
+        <h3>Remove Background</h3>
+        <p class="tool-desc">Hapus background gambar secara otomatis</p>
+        <div class="input-group">
+          <label>URL Gambar</label>
+          <input type="url" id="removebg-url" placeholder="https://..." class="tool-input" />
         </div>
-        <nav class="mt-10 grid grid-cols-2 md:grid-cols-3 gap-4">
-            <button onclick="showSection('download')" class="bg-blue-600 px-6 py-3 rounded-lg">Download</button>
-            <button onclick="showSection('editing')" class="bg-green-600 px-6 py-3 rounded-lg">Editing</button>
-            <a href="https://kawihfy.vercel.app" target="_blank" class="bg-purple-600 px-6 py-3 rounded-lg text-center">Kawihfy</a>
-            <button onclick="showSection('gorengan')" class="bg-red-700 px-6 py-3 rounded-lg">GOREngan</button>
-            <button onclick="showSection('vip')" class="bg-yellow-600 px-6 py-3 rounded-lg font-bold">VIP 🔒</button>
-        </nav>
-    </header>
+        <div class="or-divider">— atau —</div>
+        <div class="input-group">
+          <label>Upload Gambar</label>
+          <input type="file" id="removebg-file" accept="image/*" class="tool-input file-input" />
+        </div>
+        <button class="run-btn" onclick="runEdit('removebg')">Hapus Background</button>
+      </div>
+    </div>
 
-    <!-- Content Sections (Hidden by default) -->
-    <main class="container mx-auto p-6 hidden" id="content-area">
-        <button onclick="backToMain()" class="mb-4 text-blue-400 underline">← Kembali</button>
-        
-        <!-- Area Konten Dinamis akan muncul di sini via JS -->
-        <div id="dynamic-content"></div>
-    </main>
+    <!-- PDF to IMG -->
+    <div id="ed-pdftoimgconv" class="tool-panel">
+      <div class="tool-card">
+        <div class="tool-icon">📄</div>
+        <h3>PDF → Gambar</h3>
+        <p class="tool-desc">Konversi halaman PDF menjadi gambar PNG</p>
+        <div class="input-group">
+          <label>Upload File PDF</label>
+          <input type="file" id="pdftoimg-file" accept=".pdf" class="tool-input file-input" />
+        </div>
+        <button class="run-btn" onclick="runConvert('pdftoimg')">Konversi PDF</button>
+      </div>
+    </div>
 
-    <script src="script.js"></script>
+    <!-- IMG to PDF -->
+    <div id="ed-imgtopdfconv" class="tool-panel">
+      <div class="tool-card">
+        <div class="tool-icon">🖼</div>
+        <h3>Gambar → PDF</h3>
+        <p class="tool-desc">Gabungkan gambar menjadi satu file PDF</p>
+        <div class="input-group">
+          <label>Upload Gambar (bisa multiple)</label>
+          <input type="file" id="imgtopdf-file" accept="image/*" multiple class="tool-input file-input" />
+        </div>
+        <button class="run-btn" onclick="runConvert('imgtopdf')">Buat PDF</button>
+      </div>
+    </div>
+
+    <!-- PNG to JPEG -->
+    <div id="ed-pngtojpeg" class="tool-panel">
+      <div class="tool-card">
+        <div class="tool-icon">🔄</div>
+        <h3>PNG → JPEG</h3>
+        <p class="tool-desc">Konversi file PNG ke format JPEG</p>
+        <div class="input-group">
+          <label>Upload File PNG</label>
+          <input type="file" id="pngtojpeg-file" accept=".png,image/png" class="tool-input file-input" />
+        </div>
+        <button class="run-btn" onclick="runConvert('pngtojpeg')">Konversi ke JPEG</button>
+      </div>
+    </div>
+
+    <!-- JPEG to PNG -->
+    <div id="ed-jpegtopng" class="tool-panel">
+      <div class="tool-card">
+        <div class="tool-icon">🔄</div>
+        <h3>JPEG → PNG</h3>
+        <p class="tool-desc">Konversi file JPEG ke format PNG</p>
+        <div class="input-group">
+          <label>Upload File JPEG</label>
+          <input type="file" id="jpegtopng-file" accept=".jpg,.jpeg,image/jpeg" class="tool-input file-input" />
+        </div>
+        <button class="run-btn" onclick="runConvert('jpegtopng')">Konversi ke PNG</button>
+      </div>
+    </div>
+
+    <!-- Upscale -->
+    <div id="ed-upscale" class="tool-panel">
+      <div class="tool-card">
+        <div class="tool-icon">🔍</div>
+        <h3>Upscale Gambar</h3>
+        <p class="tool-desc">Perbesar resolusi gambar dengan AI</p>
+        <div class="input-group">
+          <label>URL Gambar</label>
+          <input type="url" id="upscale-url" placeholder="https://..." class="tool-input" />
+        </div>
+        <div class="or-divider">— atau —</div>
+        <div class="input-group">
+          <label>Upload Gambar</label>
+          <input type="file" id="upscale-file" accept="image/*" class="tool-input file-input" />
+        </div>
+        <button class="run-btn" onclick="runEdit('upscale')">Upscale Gambar</button>
+      </div>
+    </div>
+
+    <!-- Timpa Teks -->
+    <div id="ed-timpa" class="tool-panel">
+      <div class="tool-card">
+        <div class="tool-icon">✍</div>
+        <h3>Timpa Teks</h3>
+        <p class="tool-desc">Tambahkan teks di atas gambar</p>
+        <div class="input-group">
+          <label>URL Gambar</label>
+          <input type="url" id="timpa-url" placeholder="https://..." class="tool-input" />
+        </div>
+        <div class="or-divider">— atau —</div>
+        <div class="input-group">
+          <label>Upload Gambar</label>
+          <input type="file" id="timpa-file" accept="image/*" class="tool-input file-input" />
+        </div>
+        <div class="input-group">
+          <label>Teks yang ingin ditambahkan</label>
+          <input type="text" id="timpa-text" placeholder="Masukkan teks..." class="tool-input" />
+        </div>
+        <button class="run-btn" onclick="runEdit('timpa')">Timpa Teks</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIP PAGE -->
+  <div id="page-vip" class="page">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('home')">← Back</button>
+      <h2>★ VIP Area</h2>
+    </div>
+    <div class="vip-lock-screen" id="vip-lock">
+      <div class="vip-lock-card">
+        <div class="vip-lock-icon">🔒</div>
+        <h3>Area VIP Terkunci</h3>
+        <p>Masukkan password VIP untuk melanjutkan</p>
+        <input type="password" id="vip-password" placeholder="Password VIP..." class="tool-input" />
+        <button class="run-btn vip-btn" onclick="checkVIP()">Masuk VIP</button>
+        <p class="vip-hint">Password tersimpan di Spreadsheet A1</p>
+      </div>
+    </div>
+    <div id="vip-content" class="hidden">
+      <p class="vip-welcome">✦ Selamat datang di area VIP! ✦</p>
+      <!-- VIP tools placeholder - tidak diimplementasikan -->
+      <div class="vip-tools-grid">
+        <div class="tool-card vip-tool">
+          <div class="tool-icon">🎨</div>
+          <h3>Haram Gen</h3>
+          <p class="tool-desc">Generate gambar dengan AI</p>
+          <input type="text" id="haramgen-prompt" placeholder="Masukkan prompt..." class="tool-input" />
+          <button class="run-btn" onclick="runVIP('haramgen')">Generate</button>
+        </div>
+        <div class="tool-card vip-tool">
+          <div class="tool-icon">🖌</div>
+          <h3>Haram Edit</h3>
+          <p class="tool-desc">Edit gambar dengan AI (URL)</p>
+          <input type="url" id="haramedit-url" placeholder="https://..." class="tool-input" />
+          <button class="run-btn" onclick="runVIP('haramedit')">Edit Gambar</button>
+        </div>
+        <div class="tool-card vip-tool">
+          <div class="tool-icon">🖼</div>
+          <h3>Haram Edit v2</h3>
+          <p class="tool-desc">Deep edit gambar dengan AI</p>
+          <input type="url" id="harameditv2-url" placeholder="https://..." class="tool-input" />
+          <button class="run-btn" onclick="runVIP('harameditv2')">Edit v2</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>AISinja © 2025 · Powered by <a href="https://kawihfy.vercel.app" target="_blank">Kawihfy</a></p>
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
