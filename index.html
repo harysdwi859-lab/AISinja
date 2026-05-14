@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AISinja - All In One</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-900 text-white font-sans">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-black bg-opacity-90 flex-col items-center justify-center hidden z-50">
+        <img id="loading-cecan" src="" class="w-64 h-80 object-cover rounded-lg shadow-lg mb-4">
+        <p class="text-xl animate-pulse">Sabar proses dulu, Sambil nunggu liat cewek cantik ye kan...</p>
+    </div>
+
+    <!-- Main Menu / Hero Section -->
+    <header class="h-screen flex flex-col items-center justify-center text-center p-6" id="main-menu">
+        <h1 class="text-5xl font-bold mb-8 text-blue-500">AISinja</h1>
+        <div id="anime-quote-container" class="bg-gray-800 p-6 rounded-xl max-w-2xl border border-blue-400">
+            <img id="quote-img" src="" class="w-full h-48 object-cover rounded mb-4 hidden">
+            <p id="quote-text" class="italic text-lg">"Memuat kata-kata bijak untuk Tuan..."</p>
+            <p id="quote-char" class="mt-2 text-blue-400 font-bold"></p>
+        </div>
+        <nav class="mt-10 grid grid-cols-2 md:grid-cols-3 gap-4">
+            <button onclick="showSection('download')" class="bg-blue-600 px-6 py-3 rounded-lg">Download</button>
+            <button onclick="showSection('editing')" class="bg-green-600 px-6 py-3 rounded-lg">Editing</button>
+            <a href="https://kawihfy.vercel.app" target="_blank" class="bg-purple-600 px-6 py-3 rounded-lg text-center">Kawihfy</a>
+            <button onclick="showSection('gorengan')" class="bg-red-700 px-6 py-3 rounded-lg">GOREngan</button>
+            <button onclick="showSection('vip')" class="bg-yellow-600 px-6 py-3 rounded-lg font-bold">VIP 🔒</button>
+        </nav>
+    </header>
+
+    <!-- Content Sections (Hidden by default) -->
+    <main class="container mx-auto p-6 hidden" id="content-area">
+        <button onclick="backToMain()" class="mb-4 text-blue-400 underline">← Kembali</button>
+        
+        <!-- Area Konten Dinamis akan muncul di sini via JS -->
+        <div id="dynamic-content"></div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
